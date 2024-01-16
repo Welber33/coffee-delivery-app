@@ -6,29 +6,58 @@ import {
   CoffeeCartCardContainer,
   RemoveButton
 } from "./styles";
+import { CartItem } from "../../../../contexts/CartContext";
+import { priceFormat } from "../../../../utils/priceFormat";
+import { useCart } from "../../../../hooks/useCart";
 
-export function CoffeeCartCard() {
+interface CoffeeCartCardProps {
+  coffee: CartItem;
+}
+
+export function CoffeeCartCard({ coffee }: CoffeeCartCardProps) {
+  const { changeCartItemQuantity, removeCartItem } = useCart();
+
+  function handleIncrease() {
+    changeCartItemQuantity(coffee.id, 'increase');
+  }
+
+  function handleDecrease() {
+    changeCartItemQuantity(coffee.id, 'decrease');
+  }
+
+  function handleRemove() {
+    removeCartItem(coffee.id);
+  }
+
+  const coffeeTotal = coffee.price * coffee.quantity;
+  const formattedPrice = priceFormat(coffeeTotal);
+
   return (
     <CoffeeCartCardContainer>
       <div>
         <img
-          src="https://s3-alpha-sig.figma.com/img/0a3c/9586/9a75d3fa0ffdecc4bc46ca83d2342e1c?Expires=1705881600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=d8cv8uzdU2cZgaMEeK5IrIir-JbDWGeRvljqR5JPeStvjxYzUHXpVYRQ-Rpaw9ePgt3DoyHXW3KhJ70SJ9DTS0J9EjlEFGxt~uShOrLpZfvTApTXM7SMtWWlovQXCZgZte8DLq1Xr5wZVCzP5jw36ic96cHd5AgaU~8v7Fj0yD-AwfcqGZ6vre5hQfpmLCNQMcQzxbjP~D0xQctb2jQDx~QrUIhmrkZgl45~LuIIak01KwUlwgQodgmVk5Dl3LgcpsIdtMrhJ73G1AmeVEoOUwx895zyHCaTwjEQmoXykLcGGYwtWkvW-YYIMeUI0Dyg9OrQOGXUCgv~VSMJbVa21g__"
+          src={`/coffeeImages/${coffee.photo}`}
         />
         <div>
           <RegularText color="subtitle">
-            Latte
+            {coffee.name}
           </RegularText>
 
           <ActionsCartCardContainer>
-            <InputQuantity size="small" />
-            <RemoveButton>
+            <InputQuantity
+              size="small"
+              onIncrease={handleIncrease}
+              onDecrease={handleDecrease}
+              quantity={coffee.quantity}
+            />
+            <RemoveButton onClick={handleRemove}>
               <Trash size={16} />
               REMOVER
             </RemoveButton>
           </ActionsCartCardContainer>
         </div>
       </div>
-      <p>R$ 19,80</p>
+      <p>R$ {formattedPrice}</p>
     </CoffeeCartCardContainer>
   )
 }
