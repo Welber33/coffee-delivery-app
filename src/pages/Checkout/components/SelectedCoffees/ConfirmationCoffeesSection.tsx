@@ -43,7 +43,7 @@ export function ConfirmationCoffeesSection() {
         </RegularText>
       </div>
 
-      <ButtonContainer disabled={cartQuantity <= 0}>
+      <ButtonContainer disabled={cartQuantity <= 0} type="submit">
         Confirmar Pedido
       </ButtonContainer>
     </ConfirmationCoffeesSectionContainer>
